@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 
 bool cmp(pair<int, int> a, pair<int, int> b){
     return a.second < b.second;
@@ -17,8 +18,8 @@ int main(){
         cows.push_back({x, y});
     }
     sort(cows.begin(), cows.end());
-    int max_x = cows[cows.size()-1].first;
-    int min_x = cows[0].first;
+    ll max_x = cows[cows.size()-1].first;
+    ll min_x = cows[0].first;
 
     vector<pair<int, int>> left_max_min_y;
     int left_min_y = cows[0].second;
@@ -39,17 +40,18 @@ int main(){
         right_min_y = min(new_y, right_min_y);
         right_max_min_y[c] = {right_min_y, right_max_y};
     }
-    long long min_area = LONG_LONG_MAX;
+    ll min_area = LONG_LONG_MAX;
     // iterates using a vertical line separating the areas;
     for(int c = 0; c < cows.size() - 1; c++){
         // tests for overlap 
-        if(cows[c].first == cows[c + 1].first){
+        if(cows[c].first == cows[c+1].first){
             if((left_max_min_y[c].first <= right_max_min_y[c+1].second && left_max_min_y[c].first >= right_max_min_y[c+1].first) || 
-                left_max_min_y[c].second <= right_max_min_y[c+1].second && left_max_min_y[c].second >= right_max_min_y[c+1].first){
+                (left_max_min_y[c].second <= right_max_min_y[c+1].second && left_max_min_y[c].second >= right_max_min_y[c+1].first) ||
+                (right_max_min_y[c+1].first >= left_max_min_y[c].first && right_max_min_y[c+1].first <= left_max_min_y[c].second)){
                 continue;
             }
         }
-        long long area = (cows[c].first - cows[0].first) * (left_max_min_y[c].second - left_max_min_y[c].first) +
+        ll area = (cows[c].first - cows[0].first) * (left_max_min_y[c].second - left_max_min_y[c].first) +
             (cows[cows.size()-1].first - cows[c+1].first) * (right_max_min_y[c+1].second - right_max_min_y[c+1].first);
         min_area = min(area, min_area);
     }
@@ -57,8 +59,8 @@ int main(){
     // Now do the same for y
 
     sort(cows.begin(), cows.end(), cmp);
-    int max_y = cows[cows.size()-1].second;
-    int min_y = cows[0].second;
+    ll max_y = cows[cows.size()-1].second;
+    ll min_y = cows[0].second;
 
     vector<pair<int, int>> bottom_max_min_x;
     int bottom_min_x = cows[0].first;
@@ -83,13 +85,14 @@ int main(){
     // iterates using a horizontal line separating the areas;
     for(int c = 0; c < cows.size() - 1; c++){
         // tests for overlap 
-        if(cows[c].second == cows[c + 1].second){
+        if(cows[c].second == cows[c+1].second){
             if((bottom_max_min_x[c].first <= top_max_min_x[c+1].second && bottom_max_min_x[c].first >= top_max_min_x[c+1].first) || 
-                bottom_max_min_x[c].second <= top_max_min_x[c+1].second && bottom_max_min_x[c].second >= top_max_min_x[c+1].first){
+                (bottom_max_min_x[c].second <= top_max_min_x[c+1].second && bottom_max_min_x[c].second >= top_max_min_x[c+1].first) || 
+                (top_max_min_x[c+1].first >= bottom_max_min_x[c].first && top_max_min_x[c+1].first <= bottom_max_min_x[c].second)){
                 continue;
             }
         }
-        long long area = (cows[c].second - cows[0].second) * (bottom_max_min_x[c].second - bottom_max_min_x[c].first) +
+        ll area = (cows[c].second - cows[0].second) * (bottom_max_min_x[c].second - bottom_max_min_x[c].first) +
             (cows[cows.size()-1].second - cows[c+1].second) * (top_max_min_x[c+1].second - top_max_min_x[c+1].first);
         min_area = min(area, min_area);
     }
