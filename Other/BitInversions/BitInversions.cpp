@@ -39,7 +39,6 @@ int main(){
         auto low = bits.lower_bound({n, 0});
         
         if(n == (*low).first){
-            
             if(low == bits.begin()){
                 if((*low).second == 1){
                     bits.erase(low);
