@@ -1,52 +1,67 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int DFS(int curr, int destination, vector<vector<pair<int, int>>> &wormholes, vector<int> &evaluated, vector<bool> &visited){
-    if(visited[curr]) return INT32_MIN;
-    if(curr == destination) return 0;
-    if(evaluated[curr] != 0) return evaluated[curr];
-    visited[curr] = true;
-    for(auto i: wormholes[curr]){
-        int d = DFS(i.first, destination, wormholes, evaluated, visited);
-        if(d == INT32_MIN) continue;
-        if(d == 0){
-            evaluated[curr] = max(i.second, evaluated[curr]);
-        } else evaluated[curr] = max(min(i.second, d), evaluated[curr]);
-    }
-    visited[curr] = false;
-    return evaluated[curr];
-}
-
 int main(){
     freopen("wormsort.in", "r", stdin);
     freopen("wormsort.out", "w", stdout);
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int n, m;
     cin >> n >> m;
     vector<int> cows(n);
-    for(int i = 0; i < n; i++){
-        cin >> cows[i];
-        cows[i]--;
+    for(int &i: cows){
+        cin >> i;
+        i--;
     }
-    vector<vector<pair<int, int>>> wormholes(n); // destination, width
+    vector<vector<pair<int, int>>> wormholes(n);
+    int max_width = 0;
     for(int i = 0; i < m; i++){
         int a, b, w;
         cin >> a >> b >> w;
+        max_width = max(max_width, w);
         a--; b--;
         wormholes[a].push_back({b, w});
         wormholes[b].push_back({a, w});
     }
 
-    vector<bool> accounted(n);
-    int ans = INT32_MAX;
-    for(int i = 0; i < n; i++){
-        if(accounted[i] || cows[i] == i) continue;
-        vector<int> evaluated(n);
-        vector<bool> visited(n);
-        ans = min(ans, DFS(i, cows[i], wormholes, evaluated, visited));
+    // binary search on the possible width
+    int left = 0;
+    int right = max_width + 1;
+    while(right - left > 0){
+        int mid = (right + left + 1) / 2;
+        vector<int> components(n);
+        int component = 1;
+        for(int i = 0; i < n; i++){
+            queue<int> DFS;
+            DFS.push(i);
+            while(DFS.size() > 0){
+                int top = DFS.front();
+                DFS.pop();
+                if(components[top] != 0) continue;
+                components[top] = component;
+                for(auto c: wormholes[top]){
+                    if(components[c.first] == 0 && c.second >= mid){
+                        // cout << c.first;
+                        DFS.push(c.first);
+                    }
+                }
+            }
+            component++;
+            // cout << "here";
+        }
+        bool valid = true;
+        for(int i = 0; i < n; i++){
+            if(i != cows[i]){
+                if(components[i] != components[cows[i]] || components[i] == 0){
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        if(valid){
+            left = mid;
+        } else {
+            right = mid - 1;
+        }
     }
-    if(ans == INT32_MAX) cout << -1;
-    else cout << ans;
+    if(right == max_width + 1){ cout << -1; return 0; }
+    cout << right;
 }
