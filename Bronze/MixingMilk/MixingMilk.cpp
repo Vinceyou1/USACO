@@ -1,9 +1,8 @@
 #include <bits/stdc++.h>
-#include <cmath>
 using namespace std;
 
 int main(){
-    pair<int, int> milk[3];
+    pair<int, int> milk[3]; // capacity, milk
     freopen("mixmilk.in", "r", stdin);
     freopen("mixmilk.out", "w", stdout);
 
