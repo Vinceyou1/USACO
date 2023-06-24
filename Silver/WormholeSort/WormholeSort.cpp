@@ -12,6 +12,8 @@ int main(){
         i--;
     }
     vector<vector<pair<int, int>>> wormholes(n);
+
+    
     int max_width = 0;
     for(int i = 0; i < m; i++){
         int a, b, w;
