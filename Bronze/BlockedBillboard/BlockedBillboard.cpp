@@ -2,32 +2,26 @@
 #include <cmath>
 using namespace std;
 
+struct Rect{
+    int bl_x, bl_y, tr_x, tr_y;
+    int area(){
+        return (tr_x - bl_x) * (tr_y - bl_y);
+    }
+};
+
+int intersection(Rect a, Rect b){
+    return (max(0, min(a.tr_x, b.tr_x) - max(a.bl_x, b.bl_x))) * 
+        (max(0, min(a.tr_y, b.tr_y) - max(a.bl_y, b.bl_y)));
+}
+
 int main(){
     freopen("billboard.in", "r", stdin);
     freopen("billboard.out", "w", stdout);
+    Rect a, b, c;
+    cin >> a.bl_x >> a.bl_y >> a.tr_x >> a.tr_y;
+    cin >> b.bl_x >> b.bl_y >> b.tr_x >> b.tr_y;
+    cin >> c.bl_x >> c.bl_y >> c.tr_x >> c.tr_y;
 
-    pair<pair<int, int>, pair<int, int>> first;
-    pair<pair<int, int>, pair<int, int>> second;
-    pair<pair<int, int>, pair<int, int>> block;
-
-    cin >> first.first.first >> first.first.second >> first.second.first >> first.second.second >> second.first.first >>
-        second.first.second >> second.second.first >> second.second.second >> block.first.first >> block.first.second >>
-        block.second.first >> block.second.second;
-
-    int area1;
-    int area2;
-
-    if(first.first.first > block.first.first){
-        if(first.second.first < block.second.first){
-            if(first.first.second > block.first.second){
-                if(first.second.second < block.second.second){
-                    area1 = (first.second.first - first.first.first)*(first.second.second-first.first.second);
-                } else (first.second.first - first.first.first)*(block.second.second-first.second.)
-            }
-        }
-    }
-
-    cout << area1 + area2;
-
+    cout << a.area() - intersection(a, c) + b.area() - intersection(b, c);
     return 0;
 }
