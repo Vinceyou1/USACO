@@ -1,26 +1,25 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
+#include <bits/stdc++.h>
 using namespace std;
 
-int n;
-vector<long long> nums;
-
-long minDiff(long long p1, long long p2, int index){
-    if (index==nums.size()){
-        return abs(p1-p2);
+vector<long long> apples;
+long long solve(long long basket1, long long basket2, int index){
+    if(index==apples.size()){
+        return abs(basket1-basket2);
     } else{
-        return min(minDiff(p1+nums.at(index), p2, index+1), minDiff(p1, p2+nums.at(index), index+1));
+        long long apple_weight = apples[index];
+        return min(solve(basket1 + apple_weight, basket2, index+1), // Option 1: add apple_weight to basket 1
+                   solve(basket1, basket2 + apple_weight, index+1)); // Option 2: add apple_weight to basket 2
     }
 }
 
 int main(){
+    int n;
     cin >> n;
     for(int c = 0; c < n; c++){
         long long t;
         cin >> t;
-        nums.push_back(t);
+        apples.push_back(t);
     }
-    cout << minDiff(0, 0, 0);
+    cout << solve(0, 0, 0); // basket 1 has weight 0, basket 2 has weight 0, evalutate index 0
     return 0;
 }
