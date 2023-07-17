@@ -1,34 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+const int MAX_N = 1000000;
+int biggest_prime_factor[MAX_N + 1];
 
 
 int main(){
-    vector<int> primes;
-    const int MAX_N = 1000000;
-    bool composite[MAX_N];
     // Sieve of erasothenes
-    for(int i = 2; i < MAX_N; i++){
-        if(!composite[i]){
-            primes.push_back(i);
-            for(int j = i * 2; j < MAX_N; j += i){
-                composite[j] = true;
+    for(int i = 2; i <= MAX_N; i++){
+        if(!biggest_prime_factor[i]){
+            for(int j = i; j <= MAX_N; j += i){
+                biggest_prime_factor[j] = i;
             }
         }
-    }
-    for(int i : primes){
-        cout << i << " ";
     }
 
 
     int n; cin >> n;
     while(n--){
         int x; cin >> x;
-        int factors = 0;
-        for(int f = 1; f <= sqrt(x); f++){
-            if(f*f == x) factors--;
-            if(x % f == 0) factors += 2;
+        int ans = 1;
+        while(x != 1){
+            int prime = biggest_prime_factor[x];
+            int multiple = 1;
+            while(x % prime == 0){
+                x /= prime;
+                multiple++;
+            }
+            ans *= multiple;
         }
-        cout << factors << endl;
+        cout << ans << endl;
     }
 }
